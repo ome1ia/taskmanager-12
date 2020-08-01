@@ -9,7 +9,7 @@ import TaskListView from "./view/task-list.js";
 import NoTaskView from "./view/no-task.js";
 import {generateTask} from "./mock/task.js";
 import {generateFilter} from "./mock/filter.js";
-import {render, RenderPosition} from "./utils.js";
+import {render, RenderPosition} from "./utils/render.js";
 
 const TASK_COUNT = 22;
 const TASK_COUNT_PER_STEP = 8;
@@ -51,22 +51,22 @@ const renderTask = (taskListElement, task) => {
     document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
-  render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
+  render(taskListElement, taskComponent, RenderPosition.BEFOREEND);
 };
 
 const renderBoard = (boardContainer, boardTasks) => {
   const boardComponent = new BoardView();
   const taskListComponent = new TaskListView();
 
-  render(boardContainer, boardComponent.getElement(), RenderPosition.BEFOREEND);
-  render(boardComponent.getElement(), taskListComponent.getElement(), RenderPosition.BEFOREEND);
+  render(boardContainer, boardComponent, RenderPosition.BEFOREEND);
+  render(boardComponent, taskListComponent, RenderPosition.BEFOREEND);
 
   if (boardTasks.length === 0 || boardTasks.every((task) => task.isArchive)) {
-    render(boardComponent.getElement(), new NoTaskView().getElement(), RenderPosition.AFTERBEGIN);
+    render(boardComponent, new NoTaskView(), RenderPosition.AFTERBEGIN);
     return;
   }
 
-  render(boardComponent.getElement(), new SortView().getElement(), RenderPosition.AFTERBEGIN);
+  render(boardComponent, new SortView(), RenderPosition.AFTERBEGIN);
 
   boardTasks
     .slice(0, Math.min(TASK_COUNT, TASK_COUNT_PER_STEP))
@@ -77,7 +77,7 @@ const renderBoard = (boardContainer, boardTasks) => {
 
     const loadMoreButtonComponent = new LoadMoreButtonView();
 
-    render(boardComponent.getElement(), loadMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+    render(boardComponent, loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
     loadMoreButtonComponent.setClickHandler((evt) => {
       evt.preventDefault();
@@ -95,7 +95,7 @@ const renderBoard = (boardContainer, boardTasks) => {
   }
 };
 
-render(siteHeaderElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new FilterView(filters).getElement(), `beforeend`);
+render(siteHeaderElement, new SiteMenuView(), RenderPosition.BEFOREEND);
+render(siteMainElement, new FilterView(filters), `beforeend`);
 
 renderBoard(siteMainElement, tasks);

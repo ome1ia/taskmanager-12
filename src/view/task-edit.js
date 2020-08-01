@@ -1,6 +1,6 @@
 import AbstractView from "./abstract.js";
 import {COLORS} from "../const.js";
-import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../utils.js";
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../utils/task.js";
 
 const createTaskEditDateTemplate = (dueDate) => {
   return `<button class="card__date-deadline-toggle" type="button">
